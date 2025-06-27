@@ -5,3 +5,4 @@ django-components
 django-pwa 
 django-browser-reload 
 unfold-django 
+gunicorn
