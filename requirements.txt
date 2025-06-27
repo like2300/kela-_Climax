@@ -1,0 +1,7 @@
+django 
+requests 
+Pillow 
+django-components 
+django-pwa 
+django-browser-reload 
+unfold-django 
