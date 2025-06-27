@@ -1,0 +1,376 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<style>
+  .selected-exam {
+    background-color: #d6e4ff !important;
+    border: 2px solid #194fe5;
+  }
+
+  /* Modal style */
+  #yearModal {
+    backdrop-filter: blur(4px);
+  }
+</style>
+
+<div
+  id="PagesStart"
+  class="page-section relative flex flex-col justify-between    transition-all ease-in-out duration-700 w-full min-h-screen"
+  style='font-family: "Public Sans",  "Noto Sans", sans-serif;'
+>
+  <div>
+    <div class="flex w-full grow @container">
+      <div class="w-full gap-1 overflow-hidden @[480px]:gap-2 h-[450px] flex">
+        <div
+          class="w-full bg-center bg-no-repeat bg-cover aspect-auto rounded-b-3xl flex-1"
+          style='background-image: url("{% static "assets/mepsa.png" %}");'
+        ></div>
+      </div>
+    </div>
+    <h2 class="text-white text-[28px] font-bold px-4 text-center pb-3 pt-12">
+      Consultez vos résultats en toute simplicité
+    </h2>
+    <p class="text-slate-200 text-base px-4 text-center">
+      Vérifiez les résultats du BAC, BEPC, CEPE depuis votre mobile. Rapide, sécurisé et officiel pour tous les élèves du Congo.
+    </p>
+  </div>
+  <div>
+    <div class="flex justify-center p-4">
+      <div class="flex flex-1 gap-3 max-w-[480px] flex-col items-stretch px-4 py-3">
+        <button
+          class="flex min-w-[84px] max-w-[480px] hover:scale-110 cursor-pointer items-center justify-center rounded-full h-12 px-5 bg-white text-[#063eb0] text-base font-bold w-full transition-transform duration-300"
+          onclick="togglePages()"
+        >
+          <span class="truncate">Continuer</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== CHOIX DE L'EXAMEN ==================== -->
+<div
+  id="ChoiseExam"
+  class=" page-section relative hidden flex size-full min-h-screen flex-col bg-white  justify-between overflow-x-hidden"
+  style='font-family: "Public Sans", "Noto Sans", sans-serif;'
+>
+  <div>
+    <div class="flex items-center   p-4 pb-2 mb-12 justify-between">
+         <svg onclick="togglePages()" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+              <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
+         </svg>
+      <h2 class="text-lg font-bold text-center flex-1 pr-12">Sélectionnez l'examen</h2>
+    </div>
+
+    <!-- Exam list -->
+    <div id="examList" class="space-y-2 px-4 py-2">
+      <div onclick="selectExam(this, 'BAC')" class="exam-item cursor-pointer flex items-center gap-4 bg-white px-4 py-2 rounded-xl shadow">
+        <div class="bg-[#e7eaf3] rounded-lg size-12 flex items-center justify-center">
+           <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+              <path
+                d="M251.76,88.94l-120-64a8,8,0,0,0-7.52,0l-120,64a8,8,0,0,0,0,14.12L32,117.87v48.42a15.91,15.91,0,0,0,4.06,10.65C49.16,191.53,78.51,216,128,216a130,130,0,0,0,48-8.76V240a8,8,0,0,0,16,0V199.51a115.63,115.63,0,0,0,27.94-22.57A15.91,15.91,0,0,0,224,166.29V117.87l27.76-14.81a8,8,0,0,0,0-14.12ZM128,200c-43.27,0-68.72-21.14-80-33.71V126.4l76.24,40.66a8,8,0,0,0,7.52,0L176,143.47v46.34C163.4,195.69,147.52,200,128,200Zm80-33.75a97.83,97.83,0,0,1-16,14.25V134.93l16-8.53ZM188,118.94l-.22-.13-56-29.87a8,8,0,0,0-7.52,14.12L171,128l-43,22.93L25,96,128,41.07,231,96Z"
+              ></path>
+            </svg>
+        </div>
+        <div>
+          <p class="font-medium text-base text-[#0e111b]">BAC</p>
+          <p class="text-sm text-[#4e6297]">Baccalaureate</p>
+        </div>
+      </div>
+
+      <div onclick="selectExam(this, 'BEPC')" class="exam-item cursor-pointer flex items-center gap-4 bg-white px-4 py-2 rounded-xl shadow">
+        <div class="bg-[#e7eaf3] rounded-lg size-12 flex items-center justify-center">
+           <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+              <path
+                d="M251.76,88.94l-120-64a8,8,0,0,0-7.52,0l-120,64a8,8,0,0,0,0,14.12L32,117.87v48.42a15.91,15.91,0,0,0,4.06,10.65C49.16,191.53,78.51,216,128,216a130,130,0,0,0,48-8.76V240a8,8,0,0,0,16,0V199.51a115.63,115.63,0,0,0,27.94-22.57A15.91,15.91,0,0,0,224,166.29V117.87l27.76-14.81a8,8,0,0,0,0-14.12ZM128,200c-43.27,0-68.72-21.14-80-33.71V126.4l76.24,40.66a8,8,0,0,0,7.52,0L176,143.47v46.34C163.4,195.69,147.52,200,128,200Zm80-33.75a97.83,97.83,0,0,1-16,14.25V134.93l16-8.53ZM188,118.94l-.22-.13-56-29.87a8,8,0,0,0-7.52,14.12L171,128l-43,22.93L25,96,128,41.07,231,96Z"
+              ></path>
+            </svg>
+        </div>
+        <div>
+          <p class="font-medium text-base text-[#0e111b]">BEPC</p>
+          <p class="text-sm text-[#4e6297]">Brevet d'études du premier cycle</p>
+        </div>
+      </div>
+
+      <div onclick="selectExam(this, 'CEPE')" class="exam-item cursor-pointer flex items-center gap-4 bg-white px-4 py-2 rounded-xl shadow">
+        <div class="bg-[#e7eaf3] rounded-lg size-12 flex items-center justify-center">
+           <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+              <path
+                d="M251.76,88.94l-120-64a8,8,0,0,0-7.52,0l-120,64a8,8,0,0,0,0,14.12L32,117.87v48.42a15.91,15.91,0,0,0,4.06,10.65C49.16,191.53,78.51,216,128,216a130,130,0,0,0,48-8.76V240a8,8,0,0,0,16,0V199.51a115.63,115.63,0,0,0,27.94-22.57A15.91,15.91,0,0,0,224,166.29V117.87l27.76-14.81a8,8,0,0,0,0-14.12ZM128,200c-43.27,0-68.72-21.14-80-33.71V126.4l76.24,40.66a8,8,0,0,0,7.52,0L176,143.47v46.34C163.4,195.69,147.52,200,128,200Zm80-33.75a97.83,97.83,0,0,1-16,14.25V134.93l16-8.53ZM188,118.94l-.22-.13-56-29.87a8,8,0,0,0-7.52,14.12L171,128l-43,22.93L25,96,128,41.07,231,96Z"
+              ></path>
+            </svg>
+        </div>
+        <div>
+          <p class="font-medium text-base text-[#0e111b]">CEPE</p>
+          <p class="text-sm text-[#4e6297]">Examen de sortie de l’enseignement primaire</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bouton Next -->
+  <div class="flex px-4 py-12">
+    <button onclick="showYearModal()"
+       class="flex min-w-[84px] max-w-[480px]
+      hover:scale-97 cursor-pointer items-center
+       justify-center rounded-full h-12 px-5 mb-4
+        bg-[#063eb0] text-white text-base font-bold w-full
+         transition-transform duration-300">
+      Next
+    </button>
+  </div>
+</div>
+
+<!-- ==================== MODAL ANNEE ==================== -->
+<div id="yearModal" class="fixed inset-0 hidden z-50 bg-black bg-opacity-40 justify-center items-end">
+  <div class="modal-content bg-white w-full rounded-t-2xl p-4 h-[400px]">
+    <h3 class="text-center text-lg font-bold p-5 mb-2">Choisissez l'année</h3>
+    <div class="picker relative mx-auto w-full max-w-xs">
+      <div class="picker-window absolute inset-x-0 top-1/2 transform -translate-y-1/2 h-10 pointer-events-none border-y border-slate-300"></div>
+      <ul id="pickerYearList" class="picker-year overflow-y-scroll h-[160px] py-20 px-6 snap-y snap-mandatory text-center text-[#063eb0] text-2xl font-medium space-y-3">
+        <li class="snap-center">2026</li>
+        <li class="snap-center">2025</li>
+        <li class="snap-center">2024</li>
+        <li class="snap-center">2023</li>
+        <li class="snap-center">2022</li>
+        <li class="snap-center">2021</li>
+        <li class="snap-center">2020</li>
+      </ul>
+    </div>
+    <div class="flex gap-4 justify-center items-center pt-10">
+      <button onclick="confirmYear()" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center rounded-full h-12 px-5 bg-[#063eb0] text-white text-base font-bold w-full transition-transform duration-300">
+        Valider
+      </button>
+      <button onclick="closeYearModal()" class="flex w-[84px] hover:scale-97 cursor-pointer items-center justify-center rounded-full h-12 px-5 hover:bg-[#063eb0] hover:text-white text-[#063eb0] border-[#063eb0] border-2 text-base font-bold w-full transition-all duration-300">
+        Annuler
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+ <script defer>
+  let selectedExam = null;
+
+ function togglePages() {
+  const pageStart = document.getElementById("PagesStart");
+  const choiceExam = document.getElementById("ChoiseExam");
+
+  if (!pageStart.classList.contains("hidden")) {
+    // Transition sortante PagesStart
+    pageStart.classList.remove("opacity-100", "scale-100");
+    pageStart.classList.add("opacity-0", "scale-95");
+
+    // Après l'animation, cache-le
+    setTimeout(() => {
+      pageStart.classList.add("hidden");
+
+      // Affiche ChoiseExam avec transition entrante
+      choiceExam.classList.remove("hidden");
+      setTimeout(() => {
+        choiceExam.classList.remove("opacity-0", "scale-95");
+        choiceExam.classList.add("opacity-100", "scale-100");
+      }, 10);
+    }, 300);
+  } else {
+    // Transition sortante ChoiseExam
+    choiceExam.classList.remove("opacity-100", "scale-100");
+    choiceExam.classList.add("opacity-0", "scale-95");
+
+    setTimeout(() => {
+      choiceExam.classList.add("hidden");
+
+      pageStart.classList.remove("hidden");
+      setTimeout(() => {
+        pageStart.classList.remove("opacity-0", "scale-95");
+        pageStart.classList.add("opacity-100", "scale-100");
+      }, 10);
+    }, 300);
+  }
+}
+
+
+  function selectExam(el, name) {
+    document.querySelectorAll(".exam-item").forEach(item => {
+      item.classList.remove("selected-exam");
+    });
+    el.classList.add("selected-exam");
+    selectedExam = name;
+  }
+
+  function showModal({ id = "customModal", title = "", message = "", showConfirm = false, confirmCallback = null }) {
+    closeModal(id); // supprime toute ancienne instance
+
+    const modalHtml = `
+      <div id="${id}" class="fixed inset-0 z-50 bg-black bg-opacity-40 flex justify-center items-center" onclick="handleOverlayClick(event, '${id}')">
+        <div class="bg-white rounded-xl p-6 max-w-sm w-full shadow-lg relative" onclick="event.stopPropagation()">
+          <h3 class="text-lg font-bold text-center mb-4 text-red-600">${title}</h3>
+          <p class="text-center text-gray-700 mb-6">${message}</p>
+          <div class="flex ${showConfirm ? 'gap-4' : ''} justify-center">
+            ${
+              showConfirm
+                ? `<button onclick="${confirmCallback ? `${confirmCallback}();` : ''} closeModal('${id}')" class="bg-[#063eb0] text-white px-6 py-2 rounded-full font-semibold hover:scale-105 transition">
+                    Valider
+                  </button>`
+                : ''
+            }
+            <button onclick="closeModal('${id}')" class="text-[#063eb0] border border-[#063eb0] px-6 py-2 rounded-full font-semibold hover:bg-[#063eb0] hover:text-white transition">
+             Annulle
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    document.body.classList.add('overflow-y-hidden');
+  }
+
+  function closeModal(id = "customModal") {
+    const modal = document.getElementById(id);
+    if (modal) {
+      modal.remove();
+      document.body.classList.remove('overflow-y-hidden');
+    }
+  }
+
+  function handleOverlayClick(event, modalId) {
+    if (event.target.id === modalId) {
+      closeModal(modalId);
+    }
+  }
+
+  function showYearModal() {
+    if (!selectedExam) {
+      showModal({
+        title: "Aucun examen sélectionné",
+        message: "Veuillez sélectionner un examen avant de continuer."
+      });
+      return;
+    }
+
+    const yearModal = document.getElementById("yearModal");
+    yearModal.classList.remove("hidden");
+    yearModal.classList.add("flex", "show");
+    document.body.classList.add("overflow-y-hidden");
+  }
+
+
+  function closeYearModal() {
+    const yearModal = document.getElementById("yearModal");
+    yearModal.classList.remove("show");
+
+    // attendre la fin de l'animation avant de masquer
+    setTimeout(() => {
+      yearModal.classList.remove("flex");
+      yearModal.classList.add("hidden");
+      document.body.classList.remove("overflow-y-hidden");
+    }, 400);
+  }
+
+
+function confirmYear() {
+    const list = document.getElementById("pickerYearList");
+    const center = list.scrollTop + list.clientHeight / 2;
+    let selectedValue = null;
+
+    list.querySelectorAll("li").forEach(item => {
+      const itemTop = item.offsetTop;
+      const itemBottom = itemTop + item.offsetHeight;
+      const isCentered = center >= itemTop && center <= itemBottom;
+      item.classList.toggle("selected", isCentered);
+      if (isCentered) {
+        selectedValue = item.textContent.trim();
+      }
+    });
+
+    if (!selectedValue) {
+      showModal({
+        title: "Aucune année sélectionnée",
+        message: "Veuillez sélectionner une année valide avant de valider."
+      });
+      return;
+    }
+
+    closeYearModal();
+
+   showModal({
+      title: "Formulaire",
+      message: `Examen : <b>${selectedExam}</b> Année : <b>${selectedValue}</b>
+      
+      <form action="#" method="post" class="mb-12">
+        <div class="flex flex-col  ">
+              <label for="name">Nom <span class="text-red-500 font-bold">*</span></label>
+              <input id="name" class="w-full h-[43px] p-2 border-2 border-[#063eb0] mb-2 rounded-[7px]" type="text">
+        </div>
+        <div class="flex flex-col  ">
+              <label for="name">Prenom  <span class="text-red-500 font-bold">*</span></label>
+              <input id="name" class="w-full h-[43px] p-2 border-2 border-[#063eb0] mb-2 rounded-[7px]" type="text">
+        </div>
+        
+  
+        <div class="flex gap-4 ">
+            <div class="flex flex-col  ">
+                  <label for="name">Code <span class="text-red-500 font-bold">*</span></label>
+                  <input id="name" class="w-full h-[43px] p-2 border-2 border-[#063eb0] mb-2 rounded-[7px]" type="text">
+            </div>
+            <div class="flex flex-col  ">
+                  <label for="name">Ecole <span class="text-red-500 font-bold">*</span> </label>
+                  <select   name="school" id="school" class="w-full h-[43px] p-2 border-2 border-[#063eb0] mb-2 rounded-[7px]" type="text">
+                      <option value=""></option>
+                      <option value="[abc001]">ecole - [abc001]</option>
+                  </select>
+            </div>
+        </div>
+       
+      </form>
+      `,
+      showConfirm: true,
+      confirmCallback: "validerChoix"
+    });
+
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const list = document.getElementById("pickerYearList");
+    if (!list) return;
+
+    // Scroll automatique vers une année spécifique (ex: 2024)
+    const defaultYear = "2024";
+    const target = Array.from(list.querySelectorAll("li")).find(li => li.textContent.trim() === defaultYear);
+    if (target) {
+      list.scrollTop = target.offsetTop - list.clientHeight / 2 + target.clientHeight / 2;
+    }
+
+    // Mise à jour du style au scroll
+    list.addEventListener("scroll", () => {
+      const center = list.scrollTop + list.clientHeight / 2;
+      list.querySelectorAll("li").forEach(item => {
+        const itemTop = item.offsetTop;
+        const itemBottom = itemTop + item.offsetHeight;
+        const isCentered = center >= itemTop && center <= itemBottom;
+        item.classList.toggle("selected", isCentered);
+      });
+    });
+
+  // Force le premier scroll pour la sélection visuelle
+  setTimeout(() => list.dispatchEvent(new Event("scroll")), 100);
+});
+
+
+  function validerChoix() {
+    alert("Examen confirmé !");
+    closeModal(); // Optionnel ici
+  }
+
+  // Fermer sur clic overlay du modal année
+  document.addEventListener("click", function (e) {
+    if (e.target.id === "yearModal") {
+      closeYearModal();
+    }
+  });
+ 
+</script>
+
+{% endblock %}

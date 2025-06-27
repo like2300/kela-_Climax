@@ -1,0 +1,52 @@
+# === Python ===
+*.py[cod]
+__pycache__/
+*.so
+*.log
+
+# === macOS ===
+.DS_Store
+
+# === Environnements virtuels ===
+env/
+venv/
+ENV/
+.venv/
+.Python
+
+# === Django ===
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+static_cdn/
+local_settings.py
+.env
+
+# === VSCode / IDE ===
+.vscode/
+.idea/
+*.code-workspace
+
+# === Node (si tu utilises npm pour tailwind, etc.) ===
+node_modules/
+dist/
+
+# === PWA cache ou build local ===
+serviceworker.js.map
+manifest.json.map
+
+# === Compilations front (ex: Tailwind, SASS, etc.) ===
+*.css.map
+*.js.map
+
+# === Tests ou dev local ===
+coverage/
+htmlcov/
+pytest_cache/
+
+# === Backup files ===
+*.bak
+*.swp
+*.tmp
+*~

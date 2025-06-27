@@ -1,0 +1,95 @@
+{% load django_browser_reload static component_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>resultat scolaire</title>
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <meta name="theme-color" content="#063eb0">
+
+    <!-- tailwind js -->
+     <script   src="{% static 'js/tailwindcss.js' %}"></script>
+     <style>
+        .selected-exam {
+            background-color: #e0ebff !important;
+            border: 2px solid #194fe5;
+        }
+       .page-section {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            }
+
+            .page-section.hidden {
+            display: none;
+            opacity: 0;
+            transform: scale(0.95);
+            }
+        #yearModal .modal-content {
+        transform: translateY(100%);
+        opacity: 0;
+        transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        #yearModal.show .modal-content {
+        transform: translateY(0%);
+        opacity: 1;
+        }
+
+        .picker-year {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        }
+        .picker-year::-webkit-scrollbar {
+        display: none;
+        }
+        .picker-year li {
+        height: 40px; /* par exemple */
+        line-height: 40px;
+        }
+        .picker-window {
+        background: linear-gradient(white, rgba(255, 255, 255, 0.6) 40%, rgba(255, 255, 255, 0.6) 60%, white);
+        }
+        
+        
+        .picker-year li.selected {
+            color: #063eb0;
+            font-weight: bold;
+            transform: scale(1.1);
+            transition: all 0.3s ease;
+        }
+        
+
+
+    </style>
+
+</head>
+{% django_browser_reload_script %}
+<body class="relatif bg-[#063eb0] h-screen overflow-hidden">
+
+
+    {% block content %}
+
+    {% endblock %}
+    
+
+
+    <script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("{% static 'serviceworker.js' %}")
+        .then(function (registration) {
+          console.log("Service Worker enregistré avec succès:", registration.scope);
+        })
+        .catch(function (error) {
+          console.log("Erreur lors de l'enregistrement du Service Worker:", error);
+        });
+    });
+  }
+</script>
+
+<span class="text-red-500 font-bold">*</span>
+ 
+</body>
+</html>
