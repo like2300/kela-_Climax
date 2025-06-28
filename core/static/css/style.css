@@ -1,0 +1,99 @@
+ /* From Uiverse.io by alexruix */
+ .input-group {
+     position: relative;    
+     width: 100%;
+ }
+
+ .input {
+     border: solid 1.5px #1a73e8;
+     border-radius: 1rem;
+     background: none;
+     padding: 1rem;
+     font-size: 1rem;
+     color: #111010;
+     transition: border 150ms cubic-bezier(0.4, 0, 0.2, 1);
+     width: 100%;
+ }
+
+ .user-label {
+     position: absolute;
+     left: 15px;
+     color:  #1a73e8;
+     pointer-events: none;
+     transform: translateY(1rem);
+     transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+ }
+
+ .input:focus,
+ input:valid {
+     outline: none;
+     border: 1.5px solid #1a73e8;
+ }
+
+ .input:focus~label,
+ input:valid~label {
+     transform: translateY(-50%) scale(0.8);
+     background-color: #ffffff;
+     padding: 0 .2em;
+     color: #2196f3;
+ }
+
+ .selected-exam {
+     background-color: #d6e4ff !important;
+     border: 2px solid #194fe5;
+     transform: translateY(-2px);
+     transition: all 0.3s ease;
+ }
+
+ .exam-item {
+     transition: all 0.3s ease;
+ }
+
+ .exam-item:hover {
+     transform: translateY(-3px);
+     box-shadow: 0 6px 12px rgba(6, 62, 176, 0.15);
+ }
+
+ #yearModal {
+     backdrop-filter: blur(4px);
+     transition: opacity 0.3s ease;
+ }
+
+ .modal-content {
+     animation: slideUp 0.4s ease-out;
+ }
+
+ @keyframes slideUp {
+     from {
+         transform: translateY(100%);
+         opacity: 0;
+     }
+
+     to {
+         transform: translateY(0);
+         opacity: 1;
+     }
+ }
+
+ .picker-year li {
+     transition: all 0.2s ease;
+ }
+
+ .picker-year li.selected {
+     color: #194fe5;
+     font-size: 28px;
+     font-weight: bold;
+ }
+
+ .picker-window {
+     z-index: -1;
+ }
+
+ .page-section {
+     transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+ }
+
+ .form-input:focus {
+     box-shadow: 0 0 0 3px rgba(25, 79, 229, 0.2);
+     transition: box-shadow 0.3s ease;
+ }

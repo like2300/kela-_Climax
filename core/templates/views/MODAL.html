@@ -1,0 +1,26 @@
+<!-- ==================== MODAL ANNEE ==================== -->
+<div id="yearModal" class="fixed inset-0 hidden z-50 bg-black bg-opacity-40 justify-center items-end transition-opacity">
+  <div class="modal-content bg-white w-full rounded-t-2xl p-4 h-[400px]">
+    <h3 class="text-center text-lg font-bold p-5 mb-2 animate-fade-in">Choisissez l'année</h3>
+    <div class="picker relative mx-auto w-full max-w-xs">
+      <div class="picker-window absolute inset-x-0 top-1/2 transform -translate-y-1/2 h-10 pointer-events-none border-y border-slate-300"></div>
+      <ul id="pickerYearList" class="picker-year overflow-y-scroll h-[160px] py-20 px-6 snap-y snap-mandatory text-center text-[#063eb0] text-2xl font-medium space-y-3">
+        <li class="snap-center">2026</li>
+        <li class="snap-center">2025</li>
+        <li class="snap-center">2024</li>
+        <li class="snap-center">2023</li>
+        <li class="snap-center">2022</li>
+        <li class="snap-center">2021</li>
+        <li class="snap-center">2020</li>
+      </ul>
+    </div>
+    <div class="flex gap-4 justify-center items-center pt-10">
+      <button onclick="confirmYear()" class="flex min-w-[84px] max-w-[480px] hover:scale-[98%] cursor-pointer items-center justify-center rounded-full h-12 px-5 bg-[#063eb0] text-white text-base font-bold w-full transition-transform duration-300 shadow-lg hover:shadow-xl">
+        Valider
+      </button>
+      <button onclick="closeYearModal()" class="flex w-[84px] hover:scale-[98%] cursor-pointer items-center justify-center rounded-full h-12 px-5 hover:bg-[#063eb0] hover:text-white text-[#063eb0] border-[#063eb0] border-2 text-base font-bold w-full transition-all duration-300">
+        Annuler
+      </button>
+    </div>
+  </div>
+</div>

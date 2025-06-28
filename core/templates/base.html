@@ -7,10 +7,11 @@
     <title>resultat scolaire</title>
     <link rel="manifest" href="{% static 'manifest.json' %}">
     <meta name="theme-color" content="#063eb0">
-
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script defer src="{% static 'js/app.js' %}"></script>
     <!-- tailwind js -->
      <script   src="{% static 'js/tailwindcss.js' %}"></script>
-     <style>
+    <!--   <style>
         .selected-exam {
             background-color: #e0ebff !important;
             border: 2px solid #194fe5;
@@ -62,7 +63,7 @@
         
 
 
-    </style>
+    </style> -->
 
 </head>
 {% django_browser_reload_script %}
