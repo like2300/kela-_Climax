@@ -13,6 +13,9 @@ SECRET_KEY = 'django-insecure-bk!ch%r5ht%mg8o00$6=(la&k963or&+_76y78i&)o$q8d2$ek
 DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
+WSGI_APPLICATION = 'app.wsgi.application'
+
+
 # Application definition
 INSTALLED_APPS = [
     # Django core
@@ -46,6 +49,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 
 if DEBUG:
     MIDDLEWARE += ["django_browser_reload.middleware.BrowserReloadMiddleware"]
