@@ -1,0 +1,29 @@
+ <!-- Airtel Money -->
+      <label class="relative block cursor-pointer"onclick="selectPaymentMethod(this, '{{ titre }} Mobile Money')">
+        <input 
+          type="radio" 
+          name="operator" 
+          value="{{ titre }}" 
+          class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer peer"
+        >
+        <div class="relative w-full h-32 bg-white rounded-xl border border-[#e5e5e5] shadow-sm transition-all duration-300 peer-checked:border-2 peer-checked:border-[#194fe5] peer-checked:bg-[#d6e4ff]">
+          <div class="absolute top-4 right-4 w-5 h-5 border-2 border-[#d0d0d0] rounded-full bg-white flex items-center justify-center">
+            <div class="w-3 h-3 rounded-full bg-transparent peer-checked:bg-[#194fe5] transition-colors"></div>
+          </div>
+          <div class="absolute top-0 left-0 w-full h-full p-4 flex items-center gap-4">
+            <div class="w-16 h-16 bg-[#e7eaf3] rounded-xl flex items-center justify-center overflow-hidden">
+              <img 
+                src="{{ img }}"
+                {% comment %} src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9VSOxvxjTJOJXD_kqrnTv_m_zERraWUp85g&s"  {% endcomment %}
+                alt="{{ titre }} Money" 
+                class="w-full h-full object-contain"
+              >
+            </div>
+            <div>
+              <div class="font-bold text-lg text-[#323232]">{{ titre }} Money</div>
+              <div class="text-gray-600">Paiement par {{ titre }} Money</div>
+            </div>
+          </div>
+        </div>
+      </label>
+      

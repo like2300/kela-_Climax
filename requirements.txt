@@ -26,6 +26,8 @@ deepdiff==7.0.1
 Deprecated==1.2.18
 Django==4.2.23
 django-browser-reload==1.18.0
+django-cors-headers==4.7.0
+django-cotton==2.1.2
 django-pwa==2.0.1
 django_components==0.141.0
 djc_core_html_parser==1.0.2

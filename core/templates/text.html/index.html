@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats Scolaires Congo</title>
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#063eb0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Public Sans', 'Noto Sans', sans-serif;
+            transition: all 0.3s ease;
+        }
+        
+        body {
+            background-color: #063eb0;
+            overflow-x: hidden;
+        }
+        
+        .page-section {
+            position: absolute;
+            width: 100%;
+            min-height: 100vh;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        
+        .page-section.active {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+        
+        .exam-item {
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .exam-item.selected {
+            border-color: #063eb0;
+            background-color: #f0f7ff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(6, 62, 176, 0.1);
+        }
+        
+        .input-group {
+            position: relative;
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .input-group input {
+            width: 100%;
+            height: 56px;
+            padding: 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            background: #fff;
+            outline: none;
+        }
+        
+        .input-group input:focus {
+            border-color: #063eb0;
+            box-shadow: 0 0 0 3px rgba(6, 62, 176, 0.1);
+        }
+        
+        .input-group label {
+            position: absolute;
+            top: 18px;
+            left: 16px;
+            color: #94a3b8;
+            pointer-events: none;
+            transition: 0.2s ease all;
+        }
+        
+        .input-group input:focus + label,
+        .input-group input:not(:placeholder-shown) + label {
+            top: -8px;
+            left: 12px;
+            background: white;
+            padding: 0 8px;
+            font-size: 12px;
+            color: #063eb0;
+            font-weight: 500;
+        }
+        
+        .payment-method {
+            border: 2px solid #e2e8f0;
+        }
+        
+        .payment-method.selected {
+            border-color: #063eb0;
+            background-color: #f0f7ff;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .picker {
+            position: relative;
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .picker-window {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 50px;
+            transform: translateY(-50%);
+            border-top: 2px solid #063eb0;
+            border-bottom: 2px solid #063eb0;
+            pointer-events: none;
+        }
+        
+        .picker-year {
+            height: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .picker-year li {
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            scroll-snap-align: center;
+            font-size: 24px;
+            color: #64748b;
+        }
+        
+        .picker-year li.selected {
+            color: #063eb0;
+            font-weight: bold;
+            font-size: 28px;
+        }
+        
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #f0f7ff;
+            border-bottom-color: #063eb0;
+            border-radius: 50%;
+            display: inline-block;
+            animation: rotation 1s linear infinite;
+        }
+        
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .btn-primary {
+            background: #063eb0;
+            color: white;
+            border-radius: 9999px;
+            font-weight: 600;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(6, 62, 176, 0.2);
+        }
+        
+        .btn-primary:hover {
+            background: #052a7a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(6, 62, 176, 0.3);
+        }
+        
+        .btn-outline {
+            background: white;
+            color: #063eb0;
+            border: 2px solid #063eb0;
+            border-radius: 9999px;
+            font-weight: 600;
+            padding: 14px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .btn-outline:hover {
+            background: #f0f7ff;
+            transform: translateY(-2px);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            max-width: 320px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .title-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #0f172a;
+        }
+        
+        .data {
+            font-size: 32px;
+            font-weight: 700;
+            color: #063eb0;
+            margin-bottom: 20px;
+        }
+        
+        .range {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .fill {
+            height: 100%;
+            width: 100%;
+            background: #063eb0;
+            border-radius: 4px;
+        }
+        
+        .error {
+            border-color: #ef4444 !important;
+        }
+        
+        .error-text {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 4px;
+            display: none;
+        }
+        
+        .error-visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== PAGE D'ACCUEIL ==================== -->
+    <div id="PagesStart" class="page-section active">
+        <div class="flex flex-col h-screen">
+            <div class="flex-1 flex flex-col justify-center items-center px-4">
+                <div class="w-full max-w-md mb-8">
+                    <div class="bg-center bg-no-repeat bg-cover aspect-video rounded-b-3xl" 
+                         style='background-image: url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Flag_of_the_Republic_of_the_Congo.svg/1200px-Flag_of_the_Republic_of_the_Congo.svg.png");'></div>
+                </div>
+                
+                <h2 class="text-white text-2xl md:text-3xl font-bold text-center pb-3">
+                    Consultez vos résultats en toute simplicité
+                </h2>
+                
+                <p class="text-slate-200 text-base md:text-lg text-center max-w-md">
+                    Vérifiez les résultats du BAC, BEPC, CEPE depuis votre mobile. Rapide, sécurisé et officiel pour tous les élèves du Congo.
+                </p>
+            </div>
+            
+            <div class="p-6">
+                <button class="btn-primary w-full max-w-md mx-auto" onclick="showPage('ChoiseExam')">
+                    <span>Continuer</span>
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== CHOIX DE L'EXAMEN ==================== -->
+    <div id="ChoiseExam" class="page-section">
+        <div class="flex flex-col h-screen bg-white">
+            <div class="pt-6 px-4">
+                <div class="flex items-center mb-6">
+                    <button class="p-2 rounded-full hover:bg-gray-100" onclick="showPage('PagesStart')">
+                        <i class="fas fa-arrow-left text-gray-700 text-xl"></i>
+                    </button>
+                    <h2 class="text-lg font-bold text-gray-900 text-center flex-1">Sélection de l'examen</h2>
+                    <div class="w-8"></div>
+                </div>
+                
+                <div id="examList" class="space-y-4">
+                    <div class="exam-item p-4 rounded-xl shadow-sm" onclick="selectExam(this, 'BAC')">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-[#e7eaf3] rounded-lg w-12 h-12 flex items-center justify-center">
+                                <i class="fas fa-graduation-cap text-[#063eb0] text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-base text-[#0e111b]">BAC</p>
+                                <p class="text-sm text-[#4e6297]">Baccalaureate</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exam-item p-4 rounded-xl shadow-sm" onclick="selectExam(this, 'BEPC')">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-[#e7eaf3] rounded-lg w-12 h-12 flex items-center justify-center">
+                                <i class="fas fa-book text-[#063eb0] text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-base text-[#0e111b]">BEPC</p>
+                                <p class="text-sm text-[#4e6297]">Brevet d'études du premier cycle</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exam-item p-4 rounded-xl shadow-sm" onclick="selectExam(this, 'CEPE')">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-[#e7eaf3] rounded-lg w-12 h-12 flex items-center justify-center">
+                                <i class="fas fa-pencil-alt text-[#063eb0] text-xl"></i>
+                            </div>
+                            <div>
+                                <p class="font-medium text-base text-[#0e111b]">CEPE</p>
+                                <p class="text-sm text-[#4e6297]">Examen de sortie de l'enseignement primaire</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-auto p-6">
+                <button id="nextButton" class="btn-primary w-full max-w-md mx-auto opacity-50" onclick="showYearModal()" disabled>
+                    <span>Suivant</span>
+                    <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE DE PAIEMENT ==================== -->
+    <div id="PaymentPage" class="page-section">
+        <div class="flex flex-col h-screen bg-white">
+            <div class="pt-6 px-4">
+                <div class="flex items-center mb-6">
+                    <button class="p-2 rounded-full hover:bg-gray-100" onclick="showPage('ChoiseExam')">
+                        <i class="fas fa-arrow-left text-gray-700 text-xl"></i>
+                    </button>
+                    <h2 class="text-lg font-bold text-gray-900 text-center flex-1">Paiement</h2>
+                    <div class="w-8"></div>
+                </div>
+                
+                <div class="card mb-6">
+                    <div class="title">
+                        <i class="fas fa-money-bill-wave text-[#063eb0] text-xl"></i>
+                        <p class="title-text">Coût total du résultat</p>
+                    </div>
+                    <div class="data">150 FCFA</div>
+                    <div class="range">
+                        <div class="fill"></div>
+                    </div>
+                </div>
+                
+                <div class="mb-6">
+                    <div class="input-group">
+                        <input id="phone" type="tel" placeholder=" " required>
+                        <label for="phone">Numéro de téléphone</label>
+                    </div>
+                    <div class="error-text">Veuillez entrer un numéro de téléphone valide</div>
+                </div>
+                
+                <h3 class="text-[#0e111b] text-lg font-bold mb-4">Méthode de paiement</h3>
+                
+                <div class="space-y-4">
+                    <div class="payment-method p-4 rounded-xl" onclick="selectPaymentMethod(this, 'MTN Mobile Money')">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 bg-[#e7eaf3] rounded-xl flex items-center justify-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/MTN_Logo.svg/2560px-MTN_Logo.svg.png" 
+                                     alt="MTN Money" class="w-12 h-12 object-contain">
+                            </div>
+                            <div>
+                                <div class="font-bold text-lg text-[#323232]">MTN Money</div>
+                                <div class="text-gray-600">Paiement par MTN Money</div>
+                            </div>
+                            <div class="ml-auto w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                                <div class="w-3 h-3 rounded-full bg-[#063eb0] hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="payment-method p-4 rounded-xl" onclick="selectPaymentMethod(this, 'Airtel Mobile Money')">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 bg-[#e7eaf3] rounded-xl flex items-center justify-center">
+                                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8d/Airtel_India.svg/2560px-Airtel_India.svg.png" 
+                                     alt="Airtel Money" class="w-12 h-12 object-contain">
+                            </div>
+                            <div>
+                                <div class="font-bold text-lg text-[#323232]">Airtel Money</div>
+                                <div class="text-gray-600">Paiement par Airtel Money</div>
+                            </div>
+                            <div class="ml-auto w-6 h-6 rounded-full border-2 border-gray-300 flex items-center justify-center">
+                                <div class="w-3 h-3 rounded-full bg-[#063eb0] hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-auto p-6">
+                <button id="confirmPayment" class="btn-primary w-full max-w-md mx-auto" onclick="processPayment()">
+                    <span>Confirmer le paiement</span>
+                    <i class="fas fa-lock ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL ANNEE ==================== -->
+    <div id="yearModal" class="modal">
+        <div class="modal-content">
+            <div class="p-5">
+                <h3 class="text-center text-lg font-bold mb-6">Choisissez l'année</h3>
+                
+                <div class="picker relative mx-auto mb-8">
+                    <div class="picker-window"></div>
+                    <ul id="pickerYearList" class="picker-year">
+                        <li>2026</li>
+                        <li>2025</li>
+                        <li>2024</li>
+                        <li>2023</li>
+                        <li>2022</li>
+                        <li>2021</li>
+                        <li>2020</li>
+                        <li>2019</li>
+                        <li>2018</li>
+                        <li>2017</li>
+                        <li>2016</li>
+                        <li>2015</li>
+                        <li>2014</li>
+                        <li>2013</li>
+                        <li>2012</li>
+                        <li>2011</li>
+                        <li>2010</li>
+                    </ul>
+                </div>
+                
+                <div class="flex gap-3">
+                    <button class="btn-outline flex-1" onclick="closeYearModal()">
+                        Annuler
+                    </button>
+                    <button class="btn-primary flex-1" onclick="confirmYear()">
+                        Valider
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL SUCCÈS ==================== -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="p-8 text-center">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
+                    <i class="fas fa-check text-green-600 text-2xl"></i>
+                </div>
+                
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Paiement réussi !</h3>
+                <p class="text-gray-600 mb-6">Votre paiement a été traité avec succès. Vous pouvez maintenant consulter vos résultats.</p>
+                
+                <button class="btn-primary w-full" onclick="closeSuccessModal()">
+                    <span>Voir les résultats</span>
+                    <i class="fas fa-file-alt ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL CHARGEMENT ==================== -->
+    <div id="loadingModal" class="modal">
+        <div class="modal-content">
+            <div class="p-12 text-center">
+                <div class="loader mx-auto mb-6"></div>
+                <h3 class="text-lg font-bold text-gray-900">Traitement en cours</h3>
+                <p class="text-gray-600 mt-2">Veuillez patienter...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables d'état
+        let selectedExam = null;
+        let selectedYear = null;
+        let selectedPaymentMethod = null;
+        
+        // Navigation entre pages
+        function showPage(targetPageId) {
+            // Masquer toutes les pages
+            document.querySelectorAll('.page-section').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Afficher la page cible
+            document.getElementById(targetPageId).classList.add('active');
+        }
+        
+        // Sélection d'examen
+        function selectExam(element, exam) {
+            // Retirer la sélection précédente
+            document.querySelectorAll('.exam-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // Ajouter la sélection actuelle
+            element.classList.add('selected');
+            selectedExam = exam;
+            
+            // Activer le bouton Suivant
+            document.getElementById('nextButton').disabled = false;
+            document.getElementById('nextButton').classList.remove('opacity-50');
+        }
+        
+        // Afficher le modal d'année
+        function showYearModal() {
+            if (!selectedExam) {
+                alert("Veuillez sélectionner un examen avant de continuer.");
+                return;
+            }
+            
+            document.getElementById('yearModal').classList.add('active');
+            initYearPicker();
+        }
+        
+        // Fermer le modal d'année
+        function closeYearModal() {
+            document.getElementById('yearModal').classList.remove('active');
+        }
+        
+        // Initialiser le sélecteur d'année
+        function initYearPicker() {
+            const list = document.getElementById("pickerYearList");
+            const currentYear = new Date().getFullYear();
+            
+            // Trouver l'année actuelle et la centrer
+            const years = Array.from(list.querySelectorAll("li"));
+            const currentYearItem = years.find(li => parseInt(li.textContent) === currentYear);
+            
+            if (currentYearItem) {
+                const index = years.indexOf(currentYearItem);
+                const scrollPosition = index * 50 - (list.clientHeight / 2) + 25;
+                list.scrollTop = scrollPosition;
+                currentYearItem.classList.add('selected');
+            }
+            
+            // Ajouter l'écouteur de défilement
+            list.addEventListener('scroll', () => {
+                const center = list.scrollTop + (list.clientHeight / 2);
+                
+                years.forEach(li => {
+                    const liTop = li.offsetTop;
+                    const liBottom = liTop + li.offsetHeight;
+                    
+                    if (center >= liTop && center <= liBottom) {
+                        li.classList.add('selected');
+                    } else {
+                        li.classList.remove('selected');
+                    }
+                });
+            });
+        }
+        
+        // Confirmer l'année sélectionnée
+        function confirmYear() {
+            const list = document.getElementById("pickerYearList");
+            const selectedItem = list.querySelector("li.selected");
+            
+            if (!selectedItem) {
+                alert("Veuillez sélectionner une année.");
+                return;
+            }
+            
+            selectedYear = selectedItem.textContent;
+            closeYearModal();
+            showPage('PaymentPage');
+        }
+        
+        // Sélection de la méthode de paiement
+        function selectPaymentMethod(element, method) {
+            // Retirer la sélection précédente
+            document.querySelectorAll('.payment-method').forEach(item => {
+                item.classList.remove('selected');
+                const check = item.querySelector('.w-3.h-3');
+                if (check) check.classList.add('hidden');
+            });
+            
+            // Ajouter la sélection actuelle
+            element.classList.add('selected');
+            selectedPaymentMethod = method;
+            
+            // Afficher la coche de sélection
+            const check = element.querySelector('.w-3.h-3');
+            if (check) check.classList.remove('hidden');
+        }
+        
+        // Traiter le paiement
+        function processPayment() {
+            const phoneInput = document.getElementById('phone');
+            const phoneError = phoneInput.nextElementSibling.nextElementSibling;
+            let isValid = true;
+            
+            // Validation du numéro de téléphone
+            const phoneRegex = /^(\+242|00242)?[0-9]{9}$/;
+            if (!phoneInput.value.trim() || !phoneRegex.test(phoneInput.value.trim())) {
+                phoneInput.classList.add('error');
+                phoneError.classList.add('error-visible');
+                isValid = false;
+            } else {
+                phoneInput.classList.remove('error');
+                phoneError.classList.remove('error-visible');
+            }
+            
+            // Validation de la méthode de paiement
+            if (!selectedPaymentMethod) {
+                alert("Veuillez sélectionner une méthode de paiement.");
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Afficher le modal de chargement
+            document.getElementById('loadingModal').classList.add('active');
+            
+            // Simuler un traitement de paiement
+            setTimeout(() => {
+                document.getElementById('loadingModal').classList.remove('active');
+                document.getElementById('successModal').classList.add('active');
+            }, 2000);
+        }
+        
+        // Fermer le modal de succès
+        function closeSuccessModal() {
+            document.getElementById('successModal').classList.remove('active');
+            // Ici, vous redirigeriez normalement vers la page des résultats
+            alert("Félicitations ! Vous pouvez maintenant consulter vos résultats.");
+        }
+        
+        // Initialiser le sélecteur d'année au chargement
+        window.addEventListener('DOMContentLoaded', () => {
+            // Centrer automatiquement sur l'année en cours
+            initYearPicker();
+        });
+    </script>
+</body>
+</html>

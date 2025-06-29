@@ -1,31 +1,44 @@
 <!-- ==================== PAGE DE PAIEMENT ==================== -->
 <div
       id="PaymentPage"
-      class="page-section relative hidden flex size-full min-h-screen flex-col bg-[#f8f9fc] justify-between overflow-x-hidden"
+      class="page-section relative hidden flex size-full min-h-screen flex-col bg-white justify-between overflow-x-hidden"
       style='font-family: "Public Sans", "Noto Sans", sans-serif;'
     >
   <div>
-    <div class="flex items-center bg-[#f8f9fc] p-4 pb-2 justify-between">
-      <svg onclick="showPage('ChoiseExam')" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256" class="hover:scale-110 transition-transform">
-        <path d="M224,128a8,8,0,0,1-8,8H59.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L59.31,120H216A8,8,0,0,1,224,128Z"></path>
-      </svg>
-      <h2 class="text-[#0e111b] text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center">Paiement</h2>
-      <div class="w-6"></div> <!-- Placeholder pour l'alignement -->
-    </div>
+     
+
+    <c-back titre="Choix de l'examen" click="showPage('ChoiseExam')" />
     
-    <h3 class="text-[#0e111b] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4 animate-fade-in">Montant dû</h3>
-    <div class="flex items-center gap-4 bg-[#f8f9fc] px-4 min-h-14 justify-between">
-      <p class="text-[#0e111b] text-base font-normal leading-normal flex-1 truncate">Total</p>
-      <div class="shrink-0"><p class="text-[#0e111b] text-base font-normal leading-normal">150 FCFA</p></div>
-    </div>
+    <!-- From Uiverse.io by Yaya12085 --> 
+
+    <center class="mb-4 mt-4">
+        <div class="card">
+            <div class="title">
+                <span>
+                    <svg width="20" fill="currentColor" height="20" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1362 1185q0 153-99.5 263.5t-258.5 136.5v175q0 14-9 23t-23 9h-135q-13 0-22.5-9.5t-9.5-22.5v-175q-66-9-127.5-31t-101.5-44.5-74-48-46.5-37.5-17.5-18q-17-21-2-41l103-135q7-10 23-12 15-2 24 9l2 2q113 99 243 125 37 8 74 8 81 0 142.5-43t61.5-122q0-28-15-53t-33.5-42-58.5-37.5-66-32-80-32.5q-39-16-61.5-25t-61.5-26.5-62.5-31-56.5-35.5-53.5-42.5-43.5-49-35.5-58-21-66.5-8.5-78q0-138 98-242t255-134v-180q0-13 9.5-22.5t22.5-9.5h135q14 0 23 9t9 23v176q57 6 110.5 23t87 33.5 63.5 37.5 39 29 15 14q17 18 5 38l-81 146q-8 15-23 16-14 3-27-7-3-3-14.5-12t-39-26.5-58.5-32-74.5-26-85.5-11.5q-95 0-155 43t-60 111q0 26 8.5 48t29.5 41.5 39.5 33 56 31 60.5 27 70 27.5q53 20 81 31.5t76 35 75.5 42.5 62 50 53 63.5 31.5 76.5 13 94z">
+                        </path>
+                    </svg>
+                </span>
+                <p class="title-text">
+                Coūt total du resulat
+            
+            </div>
+            <div class="data">
+                <p class="mb-2">
+                150 FCFA
+                </p>
+                
+                 <div class="range">
+                    <div class="fill">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </center>
 
     <div class="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
-     <div class="input-group">
-        <input id="phone" required="" type="tel" name="text" autocomplete="off" class="input text-base   transition-border duration-150 ease-[cubic-bezier(0.4,0,0.2,1)]  " >
-        <label class="user-label" for="phone">Numéro de téléphone</label>
-        
-      </div>
-
+        <c-input titre="Numéro de téléphone" id="phone" type="tel" name="text" />
     </div>
     
     <h3 class="text-[#0e111b] text-lg font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-4 animate-fade-in">Méthode de paiement</h3>
@@ -33,60 +46,11 @@
     <!-- Sélecteur d'opérateur avec style bleu -->
     <div class="flex flex-col gap-4 px-4 py-2">
       <!-- MTN Mobile Money -->
-      <label class="relative block cursor-pointer">
-        <input 
-          type="radio" 
-          name="operator" 
-          value="mtn" 
-          class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer peer"
-        >
-        <div class="relative w-full h-32 bg-white rounded-xl border border-[#e5e5e5] shadow-sm transition-all duration-300 peer-checked:border-2 peer-checked:border-[#194fe5] peer-checked:bg-[#d6e4ff]">
-          <div class="absolute top-4 right-4 w-5 h-5 border-2 border-[#d0d0d0] rounded-full bg-white flex items-center justify-center">
-            <div class="w-3 h-3 rounded-full bg-transparent peer-checked:bg-[#194fe5] transition-colors"></div>
-          </div>
-          <div class="absolute top-0 left-0 w-full h-full p-4 flex items-center gap-4">
-            <div class="w-16 h-16 bg-[#e7eaf3] rounded-xl flex items-center justify-center overflow-hidden">
-              <img 
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTz5xfnMHFEtpIBntGj15vmJnOik-yuivfq9SBB0fvh_7OCRoo4RlKz_1XM4nw2zx-vpiU&usqp=CAU"
-                alt="MTN Mobile Money" 
-                class="w-full h-full object-contain"
-              >
-            </div>
-            <div>
-              <div class="font-bold text-lg text-[#323232]">MTN Mobile Money</div>
-              <div class="text-gray-600">Paiement par MTN Mobile Money</div>
-            </div>
-          </div>
-        </div>
-      </label>
+       <c-paiement titre="MTN" img="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTz5xfnMHFEtpIBntGj15vmJnOik-yuivfq9SBB0fvh_7OCRoo4RlKz_1XM4nw2zx-vpiU&usqp=CAU" />
       
       <!-- Airtel Money -->
-      <label class="relative block cursor-pointer">
-        <input 
-          type="radio" 
-          name="operator" 
-          value="airtel" 
-          class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer peer"
-        >
-        <div class="relative w-full h-32 bg-white rounded-xl border border-[#e5e5e5] shadow-sm transition-all duration-300 peer-checked:border-2 peer-checked:border-[#194fe5] peer-checked:bg-[#d6e4ff]">
-          <div class="absolute top-4 right-4 w-5 h-5 border-2 border-[#d0d0d0] rounded-full bg-white flex items-center justify-center">
-            <div class="w-3 h-3 rounded-full bg-transparent peer-checked:bg-[#194fe5] transition-colors"></div>
-          </div>
-          <div class="absolute top-0 left-0 w-full h-full p-4 flex items-center gap-4">
-            <div class="w-16 h-16 bg-[#e7eaf3] rounded-xl flex items-center justify-center overflow-hidden">
-              <img 
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9VSOxvxjTJOJXD_kqrnTv_m_zERraWUp85g&s" 
-                alt="Airtel Money" 
-                class="w-full h-full object-contain"
-              >
-            </div>
-            <div>
-              <div class="font-bold text-lg text-[#323232]">Airtel Money</div>
-              <div class="text-gray-600">Paiement par Airtel Money</div>
-            </div>
-          </div>
-        </div>
-      </label>
+      <c-paiement titre="Airtel" img="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9VSOxvxjTJOJXD_kqrnTv_m_zERraWUp85g&s" />
+
     </div>
     
     
@@ -94,12 +58,7 @@
   
   <div>
     <div class="flex px-4 py-3">
-      <button
-        class="flex min-w-[84px] max-w-[480px] hover:scale-[98%] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 flex-1 bg-[#194fe5] text-[#f8f9fc] text-base font-bold leading-normal tracking-[0.015em] transition-transform duration-300 shadow-lg hover:shadow-xl"
-        onclick="processPayment()"
-      >
-        <span class="truncate">Confirmer le paiement</span>
-      </button>
+      <c-button bg="bg-[#063eb0] text-white" click="processPayment()" titre="Confirmer le paiement" />
     </div>
     <div class="h-5 bg-[#f8f9fc]"></div>
   </div>

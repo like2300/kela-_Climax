@@ -5,22 +5,28 @@
     <div class="picker relative mx-auto w-full max-w-xs">
       <div class="picker-window absolute inset-x-0 top-1/2 transform -translate-y-1/2 h-10 pointer-events-none border-y border-slate-300"></div>
       <ul id="pickerYearList" class="picker-year overflow-y-scroll h-[160px] py-20 px-6 snap-y snap-mandatory text-center text-[#063eb0] text-2xl font-medium space-y-3">
-        <li class="snap-center">2026</li>
-        <li class="snap-center">2025</li>
-        <li class="snap-center">2024</li>
-        <li class="snap-center">2023</li>
-        <li class="snap-center">2022</li>
-        <li class="snap-center">2021</li>
-        <li class="snap-center">2020</li>
+         <c-li year="2026" />
+         <c-li year="2025" />
+         <c-li year="2024" />
+         <c-li year="2023" />
+         <c-li year="2022" />
+         <c-li year="2021" />
+         <c-li year="2020" />
+         <c-li year="2019" />
+         <c-li year="2018" />
+         <c-li year="2017" />
+         <c-li year="2016" />
+         <c-li year="2015" />
+         <c-li year="2014" />
+         <c-li year="2013" />
+         <c-li year="2012" />
+         <c-li year="2011" />
+         <c-li year="2010" />
       </ul>
     </div>
-    <div class="flex gap-4 justify-center items-center pt-10">
-      <button onclick="confirmYear()" class="flex min-w-[84px] max-w-[480px] hover:scale-[98%] cursor-pointer items-center justify-center rounded-full h-12 px-5 bg-[#063eb0] text-white text-base font-bold w-full transition-transform duration-300 shadow-lg hover:shadow-xl">
-        Valider
-      </button>
-      <button onclick="closeYearModal()" class="flex w-[84px] hover:scale-[98%] cursor-pointer items-center justify-center rounded-full h-12 px-5 hover:bg-[#063eb0] hover:text-white text-[#063eb0] border-[#063eb0] border-2 text-base font-bold w-full transition-all duration-300">
-        Annuler
-      </button>
+    <div class="flex gap-4 justify-center items-center  ">
+      <c-button bg="bg-[#063eb0] text-white" click="confirmYear()" titre="Valider" /> 
+      <c-button bg="bg-white  hover:bg-[#063eb0] hover:text-white text-[#063eb0] border-[#063eb0] border-2 text-base font-bold w-full transition-all duration-300" click="closeYearModal()" titre="Annuler" /> 
     </div>
   </div>
 </div>

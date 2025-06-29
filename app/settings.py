@@ -5,37 +5,40 @@ Django settings for app project.
 from pathlib import Path
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# Security
 SECRET_KEY = 'django-insecure-bk!ch%r5ht%mg8o00$6=(la&k963or&+_76y78i&)o$q8d2$ek'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True  # Doit être True pour activer le rechargement
-
+DEBUG = True
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
 INSTALLED_APPS = [
+    # Django core
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_components',
+    
+    # Third-party
+    'django_cotton',
     'pwa',
+    'corsheaders',
+    
+    # Local apps
     'core',
 ]
 
-# Ajout conditionnel de django_browser_reload uniquement en mode DEBUG
 if DEBUG:
     INSTALLED_APPS += ['django_browser_reload']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', 
+    'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -44,30 +47,54 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# Ajout conditionnel du middleware de rechargement uniquement en mode DEBUG
 if DEBUG:
     MIDDLEWARE += ["django_browser_reload.middleware.BrowserReloadMiddleware"]
 
+# CORS Settings
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "http://192.168.100.6:5000",
+]
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+
+ROOT_URLCONF = 'app.urls' 
+
+# Security headers
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+X_FRAME_OPTIONS = 'ALLOWALL'
+
+# Static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-ROOT_URLCONF = 'app.urls'
-
+# Templates configuration with django-cotton
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / 'templates'],
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
-            'builtins': ['django_components.templatetags.component_tags'],
-        },
-    },
+            "loaders": [(
+                "django.template.loaders.cached.Loader", [
+                    "django_cotton.cotton_loader.Loader",  # Loader spécifique pour les composants
+                    "django.template.loaders.filesystem.Loader",
+                    "django.template.loaders.app_directories.Loader",
+                ]
+            )],
+            "builtins": [
+                "django_cotton.templatetags.cotton"  # Tags template globaux
+            ],
+        }
+    }
 ]
 
+# PWA Configuration
 PWA_APP_NAME = 'Mon App Django'
 PWA_APP_DESCRIPTION = "Consulter les résultats même hors-ligne"
 PWA_APP_THEME_COLOR = '#063eb0'
@@ -75,6 +102,7 @@ PWA_APP_BACKGROUND_COLOR = '#ffffff'
 PWA_APP_DISPLAY = 'standalone'
 PWA_APP_SCOPE = '/'
 PWA_APP_START_URL = '/'
+PWA_APP_OFFLINE_URL = 'offline/'
 PWA_APP_ICONS = [
     {
         'src': '/static/icons/android-icon-192x192.png',
@@ -87,10 +115,7 @@ PWA_APP_ICONS = [
         'type': 'image/png',
     },
 ]
-
-PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'core/static/js/serviceworker.js')
-
-WSGI_APPLICATION = 'app.wsgi.application'
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'core/static/serviceworker.js')
 
 # Database
 DATABASES = {
@@ -100,30 +125,20 @@ DATABASES = {
     }
 }
 
-# Components config
-DJANGO_COMPONENTS = {
-    "components_root": BASE_DIR / "app" / "components"
-}
+# django-cotton specific
+COTTON_COMPONENTS_DIR = BASE_DIR / "components"  # Chemin vers vos composants
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 # Internationalization
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'fr-FR'
+TIME_ZONE = 'Africa/Kinshasa'
 USE_I18N = True
 USE_TZ = True
 
@@ -132,5 +147,9 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mediafiles')
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'core/static'),
+]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
